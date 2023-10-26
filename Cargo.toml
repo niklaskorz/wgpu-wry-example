@@ -1,0 +1,36 @@
+[package]
+name = "tutorial7-instancing"
+version = "0.1.0"
+authors = ["Ben Hansen <bhbenjaminhansen@gmail.com>"]
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+cfg-if = "1"
+anyhow = "1.0"
+bytemuck = { version = "1.12", features = ["derive"] }
+cgmath = "0.18"
+env_logger = "0.10"
+log = "0.4"
+pollster = "0.3"
+wgpu = { git = "https://github.com/TornaxO7/wgpu.git", branch = "bump_raw_window_handle_to_6_0_0" }
+winit = "0.29"
+wry = { git = "https://github.com/tauri-apps/wry.git", branch = "raw-handle", features = [
+    "transparent",
+] }
+
+[dependencies.image]
+version = "0.24"
+default-features = false
+features = ["png", "jpeg"]
+
+[build-dependencies]
+anyhow = "1.0"
+fs_extra = "1.2"
+glob = "0.3"
+
+[[bin]]
+name = "tutorial7-instancing"
+path = "src/main.rs"
