@@ -671,7 +671,7 @@ pub async fn run() {
     let builder = WebViewBuilder::new_as_child(&window);
     let webview = builder
         .with_position((50, 50))
-        .with_size((200, 200))
+        .with_size((400, 400))
         .with_transparent(true)
         .with_devtools(true)
         .with_html(
