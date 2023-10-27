@@ -3,10 +3,12 @@ use std::iter;
 use cgmath::prelude::*;
 use wgpu::util::DeviceExt;
 use winit::{
+    dpi::LogicalSize,
     event::*,
     event_loop::EventLoop,
     keyboard::{Key, NamedKey},
-    window::{Window, WindowBuilder},
+    raw_window_handle::HasWindowHandle,
+    window::{Window, WindowBuilder}, platform::windows::WindowBuilderExtWindows,
 };
 
 use wry::WebViewBuilder;
@@ -311,37 +313,16 @@ struct State {
     #[allow(dead_code)]
     instance_buffer: wgpu::Buffer,
     window: Window,
-    webview: wry::WebView,
 }
 
 impl State {
     async fn new(window: Window) -> Self {
-        let builder = WebViewBuilder::new(&window);
-        let webview = builder
-            .with_transparent(true)
-            .with_devtools(false)
-            .with_html(
-                r#"
-                      <!doctype html>
-                      <html style="background-color: rgba(0, 0, 0, 0);">
-                        <body style="background-color: rgba(0, 0, 0, 0); color: #fff;">hello</body>
-                        <script>
-                          window.onload = function() {
-                            document.body.innerText = `hello, ${navigator.userAgent}`;
-                          };
-                        </script>
-                      </html>"#,
-            )
-            .unwrap()
-            .build()
-            .unwrap();
-
         let size = window.inner_size();
 
         // The instance is a handle to our GPU
         // BackendBit::PRIMARY => Vulkan + Metal + DX12 + Browser WebGPU
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
-            backends: wgpu::Backends::all(),
+            backends: wgpu::Backends::VULKAN,
             ..Default::default()
         });
 
@@ -599,7 +580,6 @@ impl State {
             // NEW!
             instances,
             instance_buffer,
-            webview,
         }
     }
 
@@ -687,6 +667,28 @@ pub async fn run() {
 
     let event_loop = EventLoop::new().unwrap();
     let window = WindowBuilder::new().build(&event_loop).unwrap();
+
+    let builder = WebViewBuilder::new_as_child(&window);
+    let webview = builder
+        .with_position((50, 50))
+        .with_size((200, 200))
+        .with_transparent(true)
+        .with_devtools(true)
+        .with_html(
+            r#"
+                      <!doctype html>
+                      <html style="background-color: rgba(0, 0, 0, 0);">
+                        <body style="background-color: rgba(0, 0, 0, 0);">hello</body>
+                        <script>
+                          window.onload = function() {
+                            document.body.innerText = `hello, ${navigator.userAgent}`;
+                          };
+                        </script>
+                      </html>"#,
+        )
+        .unwrap()
+        .build()
+        .unwrap();
 
     // State::new uses async code, so we're going to wait for it to finish
     let mut state = State::new(window).await;

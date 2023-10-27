@@ -15,7 +15,7 @@ cgmath = "0.18"
 env_logger = "0.10"
 log = "0.4"
 pollster = "0.3"
-wgpu = { git = "https://github.com/TornaxO7/wgpu.git", branch = "bump_raw_window_handle_to_6_0_0" }
+wgpu = { git = "https://github.com/gfx-rs/wgpu.git", branch = "trunk" }
 winit = "0.29"
 wry = { git = "https://github.com/tauri-apps/wry.git", branch = "raw-handle", features = [
     "transparent",
