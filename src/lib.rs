@@ -3,12 +3,10 @@ use std::iter;
 use cgmath::prelude::*;
 use wgpu::util::DeviceExt;
 use winit::{
-    dpi::LogicalSize,
     event::*,
     event_loop::EventLoop,
     keyboard::{Key, NamedKey},
-    raw_window_handle::HasWindowHandle,
-    window::{Window, WindowBuilder}, platform::windows::WindowBuilderExtWindows,
+    window::{Window, WindowBuilder},
 };
 
 use wry::WebViewBuilder;
@@ -669,7 +667,7 @@ pub async fn run() {
     let window = WindowBuilder::new().build(&event_loop).unwrap();
 
     let builder = WebViewBuilder::new_as_child(&window);
-    let webview = builder
+    let _webview = builder
         .with_position((50, 50))
         .with_size((400, 400))
         .with_transparent(true)
